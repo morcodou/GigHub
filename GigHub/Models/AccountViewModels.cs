@@ -39,12 +39,12 @@ namespace GigHub.Models
         public bool RememberMe { get; set; }
     }
 
-    public class ForgotViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
+    //public class ForgotViewModel
+    //{
+    //    [Required]
+    //    [Display(Name = "Email")]
+    //    public string Email { get; set; }
+    //}
 
     ////public class LoginViewModel
     ////{
