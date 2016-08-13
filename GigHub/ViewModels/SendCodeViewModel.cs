@@ -9,4 +9,5 @@ namespace GigHub.ViewModels
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
     }
+
 }
