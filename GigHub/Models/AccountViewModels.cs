@@ -85,11 +85,11 @@ namespace GigHub.Models
         public string Code { get; set; }
     }
 
-    public class ForgotPasswordViewModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
+    //public class ForgotPasswordViewModel
+    //{
+    //    [Required]
+    //    [EmailAddress]
+    //    [Display(Name = "Email")]
+    //    public string Email { get; set; }
+    //}
 }
