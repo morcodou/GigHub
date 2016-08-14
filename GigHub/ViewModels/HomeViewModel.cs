@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace GigHub.ViewModels
 {
-    public class HomeViewModel
+    public class GigsViewModel
     {
         public IEnumerable<Gig> UpcomingsGigs { get; set; }
         public bool ShowActions { get; set; }
 
+        public string Heading { get; set; }
     }
 }
