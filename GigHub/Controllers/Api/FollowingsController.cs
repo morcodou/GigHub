@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web.Http;
 
 
-namespace GigHub.Controllers
+namespace GigHub.Controllers.Api
 {
 
     [Authorize]
