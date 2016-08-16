@@ -1,6 +1,6 @@
 ﻿using GigHub.Models;
 using Microsoft.AspNet.Identity;
-using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 
@@ -19,41 +19,42 @@ namespace GigHub.AccountController.Api
         public IHttpActionResult Cancel(int id)
         {
             var userid = User.Identity.GetUserId();
-            var gig = _context.Gigs.Single(g => g.Id == id && g.ArtistId == userid);
+            var gig = _context
+                .Gigs
+                .Include(g => g.Attendances.Select(a => a.Attendee))
+                .Single(g => g.Id == id && g.ArtistId == userid);
 
             if (gig.IsCanceled)
             {
                 return NotFound();
             }
 
-            gig.IsCanceled = true;
-
-            var notification = new Notification()
-            {
-                DateTime = DateTime.Now,
-                Gig = gig,
-                Type = NotificationType.GigCanceled,
-            };
-
-            var attendees = _context
-                .Attendances
-                .Where(a => a.GigId == gig.Id)
-                .Select(a => a.Attendee)
-                .ToList();
-
-            foreach (var attendee in attendees)
-            {
-                var usernotification = new UserNotification()
-                {
-                    User = attendee,
-                    Notification = notification
-                };
-
-                _context.UserNotifications.Add(usernotification);
-            }
+            gig.Cancel();
 
             _context.SaveChanges();
             return Ok();
         }
-    }
+
+        ////[HttpPut]
+        ////public IHttpActionResult Update(Gig gig)
+        ////{
+        ////    var userid = User.Identity.GetUserId();
+        ////    var originalgig = _context
+        ////        .Gigs
+        ////        .Include(g => g.Attendances.Select(a => a.Attendee))
+        ////        .Single(g => g.Id == gig.Id && g.ArtistId == userid);
+
+        ////    if (gig.IsCanceled)
+        ////    {
+        ////        return NotFound();
+        ////    }
+
+        ////    gig.Update(originalgig);
+
+        ////    _context.SaveChanges();
+        ////    return Ok();
+    ////}
+}
+
+
 }
