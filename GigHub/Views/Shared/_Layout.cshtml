@@ -53,9 +53,9 @@
             else if (notification.type == 2){
             var changes = [], originalValues = [], newValues =[];
 
-            if (notification.originalVenue != notification.gig.venue){
+            if (notification.originaVenue != notification.gig.venue){
             changes.push('venue');
-            originalValues.push(notification.originalVenue);
+            originalValues.push(notification.originaVenue);
             newValues.push(notification.gig.venue);
             }
 
