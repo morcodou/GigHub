@@ -96,6 +96,10 @@ h6,
   margin-bottom: 20px;
 }
 .form-control {
+  -webkit-box-shadow: none;
+  transition: none;
+}
+.form-control {
   font-size: 17px;
   height: 44px;
   border-radius: 9px;
@@ -179,4 +183,7 @@ h6,
 }
 .popover-notifications ul.notifications .highlight {
   font-weight: bold;
+}
+#searchgigs {
+  width: 300px;
 }
