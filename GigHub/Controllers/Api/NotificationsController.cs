@@ -16,6 +16,7 @@ namespace GigHub.Controllers.Api
             _context = new ApplicationDbContext();
         }
 
+        [HttpGet]
         public IEnumerable<Notification> GetNewNotifications()
         {
             var userid = User.Identity.GetUserId();
@@ -47,5 +48,23 @@ namespace GigHub.Controllers.Api
 
             ////return notifications.Select(mapper.Map<Notification, NotificationDto>);
         }
+
+
+        [HttpPost]
+        public IHttpActionResult NotificationsAsRead()
+        {
+            var userid = User.Identity.GetUserId();
+
+            var notifications = _context.UserNotifications.Where(un => un.UserId == userid && !un.IsRead).ToList();
+
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+            }
+
+            _context.SaveChanges();
+            return Ok();
+        }
+
     }
 }
