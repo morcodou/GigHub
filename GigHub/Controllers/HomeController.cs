@@ -1,5 +1,6 @@
 ﻿using GigHub.Models;
 using GigHub.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -24,19 +25,27 @@ namespace GigHub.Controllers
             if (!string.IsNullOrWhiteSpace(query))
             {
                 upcominggigs = upcominggigs
-                    .Where(g => 
+                    .Where(g =>
                             g.Artist.Name.Contains(query) ||
                             g.Genre.Name.Contains(query) ||
                             g.Venue.Contains(query)
                     );
             }
 
+            var userid = User.Identity.GetUserId();
+            var attendances = _context
+                .Attendances
+                .Where(x => x.AttendeeId == userid && x.Gig.DateTime > DateTime.Now)
+                .ToList()
+                .ToLookup(a=> a.GigId);
+
             var viewmodel = new GigsViewModel()
             {
                 UpcomingsGigs = upcominggigs,
                 ShowActions = User.Identity.IsAuthenticated,
                 Heading = "Upcomings Gigs",
-                SearchTerm = query                
+                SearchTerm = query,
+                Attendances = attendances
             };
 
             return View("Gigs", viewmodel);
