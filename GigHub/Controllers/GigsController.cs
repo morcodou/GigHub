@@ -49,6 +49,30 @@ namespace GigHub.Controllers
             return View("GigForm", viewmodel);
         }
 
+        public ActionResult Details (int id)
+        {
+            var gig = _context.Gigs
+                .Include(g=> g.Artist)
+                .Include(g=> g.Genre)
+                .SingleOrDefault(g => g.Id == id);
+
+            if (gig == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewmodel = new GigDetailsViewModel() { Gig = gig };
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userid = User.Identity.GetUserId();
+                viewmodel.IsAttending = _context.Attendances.Any(a => a.GigId == gig.Id && a.AttendeeId == userid);
+                viewmodel.IsFollowing = _context.Followings.Any(f => f.FolloweeId == gig.ArtistId && f.FollowerId == userid);
+            }
+
+            return View("Details", viewmodel);
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
