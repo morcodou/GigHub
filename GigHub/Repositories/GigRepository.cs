@@ -55,15 +55,9 @@ namespace GigHub.Repositories
                 .ToList();
         }
 
-        public void AddGig(Gig gig)
+        public void Add(Gig gig)
         {
             _context.Gigs.Add(gig);
-        }
-
-        public bool SaveChanges()
-        {
-            _context.SaveChanges();
-            return true;
         }
     }
 }
