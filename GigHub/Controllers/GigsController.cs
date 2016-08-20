@@ -9,22 +9,11 @@ namespace GigHub.Controllers
 {
     public class GigsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        public readonly IUnitOfWork _unitOfWork;
 
-        //public readonly AttendanceRepository _attendanceRepository;
-        //public readonly GigRepository _gigRepository;
-        //public readonly GenreRepository _genreRepository;
-        //public readonly FollowingRepository _followingRepository;
-        public readonly UnitOfWork _unitOfWork;
-
-        public GigsController()
+        public GigsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
-            //_attendanceRepository = new AttendanceRepository(_context);
-            //_gigRepository = new GigRepository(_context);
-            //_genreRepository = new GenreRepository(_context);
-            //_followingRepository = new FollowingRepository(_context);
-            _unitOfWork = new UnitOfWork(_context);
+            _unitOfWork = unitOfWork;
         }
 
         [Authorize]
