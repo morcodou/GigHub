@@ -245,6 +245,18 @@
     <Compile Include="Controllers\FolloweesController.cs" />
     <Compile Include="Controllers\Api\FollowingsController.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
+    <Compile Include="Core\Repositories\IUserNotificationRepository.cs" />
+    <Compile Include="Core\Repositories\INotificationRepository.cs" />
+    <Compile Include="Persistence\EntityConfigurations\UserNotificationConfiguration.cs" />
+    <Compile Include="Persistence\EntityConfigurations\NotificationConfiguration .cs" />
+    <Compile Include="Persistence\EntityConfigurations\GenreConfiguration.cs" />
+    <Compile Include="Persistence\EntityConfigurations\ApplicationUserConfiguration.cs" />
+    <Compile Include="Persistence\EntityConfigurations\FollowingConfiguration.cs" />
+    <Compile Include="Persistence\EntityConfigurations\AttendanceConfiguration.cs" />
+    <Compile Include="Persistence\EntityConfigurations\GigConfiguration.cs" />
+    <Compile Include="Persistence\Repositories\NotificationRepository.cs" />
+    <Compile Include="Persistence\Repositories\ApplicationUserRepository.cs" />
+    <Compile Include="Core\Repositories\IApplicationUserRepository.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Persistence\Repositories\AttendanceRepository.cs" />
     <Compile Include="Persistence\Repositories\FollowingRepository.cs" />
@@ -319,6 +331,7 @@
     <Compile Include="Core\Models\UserNotification.cs" />
     <Compile Include="Core\Models\Notification.cs" />
     <Compile Include="Core\Models\NotificationType.cs" />
+    <Compile Include="Persistence\Repositories\UserNotificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Core\ViewModels\ExternalLoginConfirmationViewModel.cs" />

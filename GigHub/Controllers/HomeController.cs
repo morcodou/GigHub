@@ -1,10 +1,6 @@
-﻿using GigHub.Core.ViewModels;
-using GigHub.Models;
-using GigHub.Repositories;
-using GigHub.ViewModels;
+﻿using GigHub.Core;
+using GigHub.Core.ViewModels;
 using Microsoft.AspNet.Identity;
-using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -12,33 +8,18 @@ namespace GigHub.Controllers
 {
     public class HomeController : Controller
     {
-        public ApplicationDbContext _context;
-        public readonly AttendanceRepository _attendanceRepository;
+        IUnitOfWork _unitOfWork;
 
-        public HomeController()
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
-            _attendanceRepository = new AttendanceRepository(_context);
+            _unitOfWork = unitOfWork;
         }
         public ActionResult Index(string query = null)
         {
-            var upcominggigs = _context.Gigs
-                .Include(g => g.Artist)
-                .Include(g => g.Genre)
-                .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
-
-            if (!string.IsNullOrWhiteSpace(query))
-            {
-                upcominggigs = upcominggigs
-                    .Where(g =>
-                            g.Artist.Name.Contains(query) ||
-                            g.Genre.Name.Contains(query) ||
-                            g.Venue.Contains(query)
-                    );
-            }
+            var upcominggigs = _unitOfWork.Gigs.GetUpCommingGigByQuery(query);
 
             var userid = User.Identity.GetUserId();
-            var attendances = _attendanceRepository.GetFutureAttendances(userid).ToLookup(a=> a.GigId);
+            var attendances = _unitOfWork.Attendances.GetFutureAttendances(userid).ToLookup(a=> a.GigId);
 
             var viewmodel = new GigsViewModel()
             {

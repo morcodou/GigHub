@@ -13,12 +13,7 @@ namespace GigHub.Core.Models
         public bool IsRead { get; set; }
 
 
-        [Key]
-        [Column(Order = 1)]
         public string UserId { get; private set; }
-
-        [Key]
-        [Column(Order = 2)]
         public int NotificationId { get; private set; }
 
         public UserNotification(ApplicationUser user, Notification notification)

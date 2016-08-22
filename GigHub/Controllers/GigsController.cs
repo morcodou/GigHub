@@ -149,7 +149,7 @@ namespace GigHub.Controllers
         public ActionResult Mine()
         {
             var userid = User.Identity.GetUserId();
-            var gigs = _unitOfWork.Gigs.GetUpCommingGigdByArtist(userid);
+            var gigs = _unitOfWork.Gigs.GetUpCommingGigByArtist(userid);
 
             return View(gigs);
         }

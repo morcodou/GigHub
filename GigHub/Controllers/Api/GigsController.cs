@@ -1,7 +1,5 @@
-﻿using GigHub.Models;
+﻿using GigHub.Core;
 using Microsoft.AspNet.Identity;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Http;
 
 namespace GigHub.AccountController.Api
@@ -9,52 +7,32 @@ namespace GigHub.AccountController.Api
     [Authorize]
     public class GigsController : ApiController
     {
-        private ApplicationDbContext _context;
-        public GigsController()
+        IUnitOfWork _unitOfWork;
+
+        public GigsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpDelete]
         public IHttpActionResult Cancel(int id)
         {
+            var gig = _unitOfWork.Gigs.GetGigWithAttendees(id);
             var userid = User.Identity.GetUserId();
-            var gig = _context
-                .Gigs
-                .Include(g => g.Attendances.Select(a => a.Attendee))
-                .Single(g => g.Id == id && g.ArtistId == userid);
 
-            if (gig.IsCanceled)
+            if (gig == null || gig.IsCanceled)
             {
                 return NotFound();
             }
 
-            gig.Cancel();
+            if (gig.ArtistId != userid)
+            {
+                return Unauthorized();
+            }
 
-            _context.SaveChanges();
+            _unitOfWork.Gigs.Remove(gig);
+            _unitOfWork.Complete();
             return Ok();
         }
-
-        ////[HttpPut]
-        ////public IHttpActionResult Update(Gig gig)
-        ////{
-        ////    var userid = User.Identity.GetUserId();
-        ////    var originalgig = _context
-        ////        .Gigs
-        ////        .Include(g => g.Attendances.Select(a => a.Attendee))
-        ////        .Single(g => g.Id == gig.Id && g.ArtistId == userid);
-
-        ////    if (gig.IsCanceled)
-        ////    {
-        ////        return NotFound();
-        ////    }
-
-        ////    gig.Update(originalgig);
-
-        ////    _context.SaveChanges();
-        ////    return Ok();
-    ////}
-}
-
-
+    }
 }

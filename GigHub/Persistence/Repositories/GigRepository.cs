@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace GigHub.Repositories
+namespace GigHub.Persistence.Repositories
 {
     public class GigRepository : IGigRepository
     {
@@ -49,7 +49,7 @@ namespace GigHub.Repositories
         ////        .SingleOrDefault(g => g.Id == gigId);
         ////}
 
-        public IEnumerable<Gig> GetUpCommingGigdByArtist(string userid)
+        public IEnumerable<Gig> GetUpCommingGigByArtist(string userid)
         {
             return _context.Gigs
                 .Where(g => g.ArtistId == userid && g.DateTime > DateTime.Now && !g.IsCanceled)
@@ -60,6 +60,29 @@ namespace GigHub.Repositories
         public void Add(Gig gig)
         {
             _context.Gigs.Add(gig);
+        }
+
+        public IEnumerable<Gig> GetUpCommingGigByQuery(string query)
+        {
+            var upcominggigs = _context.Gigs
+                                .Include(g => g.Artist)
+                                .Include(g => g.Genre)
+                                .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                upcominggigs = upcominggigs.Where(g =>
+                                            g.Artist.Name.Contains(query) ||
+                                            g.Genre.Name.Contains(query) ||
+                                            g.Venue.Contains(query));
+            }
+
+            return upcominggigs;
+        }
+
+        public void Remove(Gig gig)
+        {
+            gig.Cancel();
         }
     }
 }
