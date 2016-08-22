@@ -21,20 +21,21 @@ namespace GigHub.Controllers.Api
         [HttpPost]
         public IHttpActionResult Attend(AttendanceDto dto)
         {
-            var userid = User.Identity.GetUserId();
+            var attendance = _unitOfWork.Attendances.GetAttendance(dto.GigId);
 
-            if (_unitOfWork.Attendances.GetAttendance(dto.GigId, userid) != null)
+            var userid = User.Identity.GetUserId();
+            if (attendance.AttendeeId == userid)
             {
                 return BadRequest("The attendance already exists.");
             }
 
-            var attendance = new Attendance()
+            var newattendance = new Attendance()
             {
                 GigId = dto.GigId,
-                AttendeeId = User.Identity.GetUserId()
+                AttendeeId = userid
             };
 
-            _unitOfWork.Attendances.Add(attendance);
+            _unitOfWork.Attendances.Add(newattendance);
             _unitOfWork.Complete();
 
             return Ok();
@@ -43,12 +44,17 @@ namespace GigHub.Controllers.Api
         [HttpDelete]
         public IHttpActionResult DeleteAttendance(int id)
         {
-            var userid = User.Identity.GetUserId();
-            var attendance = _unitOfWork.Attendances.GetAttendance(id, userid);
+            var attendance = _unitOfWork.Attendances.GetAttendance(id);
 
             if (attendance == null)
             {
                 return NotFound();
+            }
+
+            var userid = User.Identity.GetUserId();
+            if (attendance.AttendeeId != userid)
+            {
+                return Unauthorized();
             }
 
             _unitOfWork.Attendances.Remove(attendance);
